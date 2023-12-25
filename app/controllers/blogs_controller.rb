@@ -4,6 +4,7 @@ class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
 
   before_action :set_blog, only: %i[show edit update destroy]
+  before_action :correct_user, only: %i[edit update]
 
   def index
     @blogs = Blog.search(params[:term]).published.default_order
@@ -49,5 +50,10 @@ class BlogsController < ApplicationController
 
   def blog_params
     params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
+  end
+
+  def correct_user
+    @user = @blog.user
+    redirect_to(books_path) unless @user == current_user
   end
 end
