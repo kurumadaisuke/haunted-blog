@@ -4,7 +4,7 @@ class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
 
   before_action :set_blog, only: %i[show edit update destroy]
-  before_action :correct_user, only: %i[edit update]
+  before_action :correct_user, only: %i[edit update destroy]
 
   def index
     @blogs = Blog.search(params[:term]).published.default_order
@@ -54,6 +54,6 @@ class BlogsController < ApplicationController
 
   def correct_user
     @user = @blog.user
-    redirect_to(books_path) unless @user == current_user
+    raise ActiveRecord::RecordNotFound unless @user == current_user
   end
 end
