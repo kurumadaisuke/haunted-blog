@@ -29,10 +29,14 @@ class BlogsController < ApplicationController
   end
 
   def update
-    if @blog.update(blog_params)
-      redirect_to blog_url(@blog), notice: 'Blog was successfully updated.'
+    if current_user.premium || !params[:blog][:random_eyecatch]
+      if @blog.update(blog_params)
+        redirect_to blog_url(@blog), notice: 'Blog was successfully updated.'
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to root_url, alert: 'Regular users cannot set random_eyecatch.'
     end
   end
 
@@ -53,7 +57,7 @@ class BlogsController < ApplicationController
   end
 
   def correct_user
-    @user = @blog.user
-    raise ActiveRecord::RecordNotFound unless @user == current_user
+    user = @blog.user
+    raise ActiveRecord::RecordNotFound unless user == current_user
   end
 end
