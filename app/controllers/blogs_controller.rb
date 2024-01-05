@@ -9,7 +9,13 @@ class BlogsController < ApplicationController
     @blogs = Blog.search(params[:term]).published.default_order
   end
 
-  def show; end
+  def show
+    if logged_in?
+      
+    else
+      Blog.published.find(params[:id])
+    end
+  end
 
   def new
     @blog = Blog.new
@@ -55,5 +61,9 @@ class BlogsController < ApplicationController
 
   def blog_params
     params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
+  end
+
+  def logged_in?
+    !current_user.nil?
   end
 end
