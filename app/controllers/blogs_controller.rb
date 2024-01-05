@@ -10,11 +10,12 @@ class BlogsController < ApplicationController
   end
 
   def show
-    if logged_in?
-      
-    else
-      Blog.published.find(params[:id])
-    end
+    # debugger
+    @blog = if logged_in? && Blog.find(params[:id]).secret
+              current_user.blogs.find(params[:id])
+            else
+              Blog.published.find(params[:id])
+            end
   end
 
   def new
