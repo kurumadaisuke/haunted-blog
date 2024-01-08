@@ -10,7 +10,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = if logged_in? && Blog.find(params[:id]).secret
+    @blog = if user_signed_in? && Blog.find(params[:id]).secret
               current_user.blogs.find(params[:id])
             else
               Blog.published.find(params[:id])
@@ -59,9 +59,5 @@ class BlogsController < ApplicationController
     else
       params.require(:blog).permit(:title, :content, :secret)
     end
-  end
-
-  def logged_in?
-    !current_user.nil?
   end
 end
