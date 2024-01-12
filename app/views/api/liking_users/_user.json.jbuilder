@@ -1,2 +1,1 @@
-# レビューがOKであればファイル削除
-# json.extract! user, :id, :created_at, :updated_at, :nickname, :premium
+json.merge! user.attributes.except('email')
