@@ -1,1 +1,1 @@
-json.merge! user.attributes.except('email')
+json.extract! user, :id, :nickname
